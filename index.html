@@ -33,7 +33,9 @@
 </head>
 <body class="bg-slate-50 h-screen flex overflow-hidden text-slate-800">
 
-    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl z-20 shrink-0 transition-all duration-300">
+    <div id="sidebar-overlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/40 z-20 md:hidden"></div>
+
+    <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl z-30 shrink-0 transition-transform duration-300 fixed md:static inset-y-0 left-0 -translate-x-full md:translate-x-0 h-full">
         <div class="h-20 flex items-center px-6 border-b border-slate-800">
             <div class="flex items-center gap-3 text-white">
                 <div class="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-500/30">
@@ -61,34 +63,36 @@
 
     <div class="flex-1 flex flex-col h-full relative">
         
-        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-8 z-10 shrink-0">
-            <div class="relative">
-                <button onclick="toggleMonthPicker()" id="month-picker-btn" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 rounded-xl px-5 py-3 shadow-inner transition">
-                    <i data-lucide="calendar-days" class="w-4 h-4 text-slate-500"></i>
-                    <span id="current-month-display" class="font-bold text-slate-800 text-lg tracking-tight">YYYY. MM</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+        <header class="h-20 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-8 z-10 shrink-0">
+            <div class="flex items-center gap-2 md:gap-3">
+                <button onclick="toggleSidebar()" class="md:hidden bg-slate-100 hover:bg-slate-200 rounded-xl p-3 shadow-inner transition shrink-0">
+                    <i data-lucide="menu" class="w-5 h-5 text-slate-600"></i>
                 </button>
-                <div id="month-picker" class="hidden absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 z-30 w-72">
-                    <div class="flex items-center justify-between mb-3">
-                        <button onclick="changePickerYear(-1)" class="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
-                        <span id="picker-year-display" class="font-bold text-slate-800">YYYY년</span>
-                        <button onclick="changePickerYear(1)" class="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                <div class="relative">
+                    <button onclick="toggleMonthPicker()" id="month-picker-btn" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 rounded-xl px-3 md:px-5 py-3 shadow-inner transition">
+                        <i data-lucide="calendar-days" class="w-4 h-4 text-slate-500"></i>
+                        <span id="current-month-display" class="font-bold text-slate-800 text-base md:text-lg tracking-tight">YYYY. MM</span>
+                        <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
+                    </button>
+                    <div id="month-picker" class="hidden absolute top-full left-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 z-30 w-72">
+                        <div class="flex items-center justify-between mb-3">
+                            <button onclick="changePickerYear(-1)" class="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                            <span id="picker-year-display" class="font-bold text-slate-800">YYYY년</span>
+                            <button onclick="changePickerYear(1)" class="p-1.5 hover:bg-slate-100 rounded-lg text-slate-500 transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                        </div>
+                        <div id="month-grid" class="grid grid-cols-4 gap-2"></div>
                     </div>
-                    <div id="month-grid" class="grid grid-cols-4 gap-2"></div>
                 </div>
             </div>
 
             <div class="flex gap-3">
-                <button onclick="resetToDefaultData()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-200 px-4 py-2.5 rounded-xl font-bold transition flex items-center gap-2">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i> 기본 데이터(CSV) 덮어쓰기
-                </button>
-                <button onclick="openModal()" class="bg-slate-900 hover:bg-black text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-slate-200 transition flex items-center gap-2">
-                    <i data-lucide="plus" class="w-4 h-4"></i> 내역 추가
+                <button onclick="openModal()" class="bg-slate-900 hover:bg-black text-white px-4 md:px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-slate-200 transition flex items-center gap-2">
+                    <i data-lucide="plus" class="w-4 h-4"></i> <span class="hidden sm:inline">내역 추가</span>
                 </button>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto p-8 bg-slate-50/50">
+        <main class="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50">
             
             <div id="tab-dashboard" class="tab-content active space-y-10 max-w-7xl mx-auto">
 
@@ -108,10 +112,10 @@
                             <p class="text-sm font-semibold text-slate-500 mb-1">연간 총 지출</p>
                             <h3 class="text-3xl font-extrabold text-slate-800" id="annual-kpi-expense">₩ 0</h3>
                         </div>
-                        <div class="bg-indigo-600 rounded-2xl shadow-md p-6 text-white relative overflow-hidden">
+                        <div class="bg-gradient-to-br from-purple-600 to-indigo-600 rounded-2xl shadow-md p-6 text-white relative overflow-hidden">
                             <div class="absolute right-0 bottom-0 w-32 h-32 bg-white/10 rounded-tl-[100px]"></div>
-                            <p class="text-sm font-medium text-indigo-100 mb-1">연간 잉여금</p>
-                            <h3 class="text-3xl font-extrabold" id="annual-kpi-surplus">₩ 0</h3>
+                            <p class="text-sm font-medium text-purple-100 mb-1">연간 투자금</p>
+                            <h3 class="text-3xl font-extrabold" id="annual-kpi-invest">₩ 0</h3>
                         </div>
                     </div>
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
@@ -120,9 +124,17 @@
                     </div>
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                         <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2"><i data-lucide="bar-chart-3" class="w-5 h-5 text-indigo-500"></i> 연간 지출 카테고리 비율</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                            <div class="h-[280px] w-full"><canvas id="annualExpenseChart"></canvas></div>
-                            <div id="annual-category-list" class="space-y-2.5 max-h-[280px] overflow-y-auto pr-2"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                            <div class="max-h-[320px] overflow-y-auto">
+                                <div id="annualExpenseChart-wrap" class="w-full relative" style="height:280px;">
+                                    <canvas id="annualExpenseChart"></canvas>
+                                    <div id="annualExpenseChart-empty" class="hidden absolute inset-0 flex flex-col items-center justify-center text-slate-400 gap-2">
+                                        <i data-lucide="inbox" class="w-8 h-8"></i>
+                                        <p class="text-sm font-medium">등록된 지출 내역이 없습니다</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="annual-category-list" class="space-y-2.5 max-h-[320px] overflow-y-auto pr-2"></div>
                         </div>
                     </div>
                 </section>
@@ -152,7 +164,13 @@
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                         <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2"><i data-lucide="pie-chart" class="w-5 h-5 text-rose-500"></i> 지출 카테고리 비율</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                            <div class="h-[280px] w-full"><canvas id="expenseChart"></canvas></div>
+                            <div class="h-[280px] w-full relative">
+                                <canvas id="expenseChart"></canvas>
+                                <div id="expenseChart-empty" class="hidden absolute inset-0 flex flex-col items-center justify-center text-slate-400 gap-2">
+                                    <i data-lucide="inbox" class="w-8 h-8"></i>
+                                    <p class="text-sm font-medium">등록된 지출 내역이 없습니다</p>
+                                </div>
+                            </div>
                             <div id="category-list" class="space-y-2.5 max-h-[280px] overflow-y-auto pr-2"></div>
                         </div>
                     </div>
@@ -185,9 +203,17 @@
             <div id="tab-expense" class="tab-content max-w-6xl mx-auto space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div class="px-6 py-5 border-b border-slate-100 flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
-                            <h3 class="text-lg font-bold text-slate-800">하은 지출 및 고정비</h3>
+                        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-purple-400"></span>
+                                <h3 class="text-lg font-bold text-slate-800">하은 지출 및 고정비</h3>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span id="expense-total-하은" class="text-sm font-extrabold text-rose-600">₩ 0</span>
+                                <button onclick="deleteAllExpenses('하은')" class="text-xs font-semibold text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 전체삭제
+                                </button>
+                            </div>
                         </div>
                         <div class="overflow-x-auto max-h-[600px] overflow-y-auto relative">
                             <table class="w-full text-left table-fixed">
@@ -204,9 +230,17 @@
                         </div>
                     </div>
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                        <div class="px-6 py-5 border-b border-slate-100 flex items-center gap-2">
-                            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-                            <h3 class="text-lg font-bold text-slate-800">루리 지출 및 고정비</h3>
+                        <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                                <h3 class="text-lg font-bold text-slate-800">루리 지출 및 고정비</h3>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span id="expense-total-루리" class="text-sm font-extrabold text-rose-600">₩ 0</span>
+                                <button onclick="deleteAllExpenses('루리')" class="text-xs font-semibold text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                    <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 전체삭제
+                                </button>
+                            </div>
                         </div>
                         <div class="overflow-x-auto max-h-[600px] overflow-y-auto relative">
                             <table class="w-full text-left table-fixed">
@@ -225,9 +259,17 @@
                 </div>
 
                 <div id="expense-common-wrap" class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hidden">
-                    <div class="px-6 py-5 border-b border-slate-100 flex items-center gap-2">
-                        <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
-                        <h3 class="text-lg font-bold text-slate-800">공통 지출 및 고정비</h3>
+                    <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                            <h3 class="text-lg font-bold text-slate-800">공통 지출 및 고정비</h3>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span id="expense-total-공통" class="text-sm font-extrabold text-rose-600">₩ 0</span>
+                            <button onclick="deleteAllExpenses('공통')" class="text-xs font-semibold text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 전체삭제
+                            </button>
+                        </div>
                     </div>
                     <div class="overflow-x-auto max-h-[400px] overflow-y-auto relative">
                         <table class="w-full text-left table-fixed">
@@ -321,6 +363,31 @@
         </div>
     </div>
 
+    <!-- 저장/삭제 완료 토스트 알림 -->
+    <div id="toast" class="fixed top-6 left-1/2 bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-2 transition-all duration-300" style="transform: translate(-50%, -16px); opacity: 0; pointer-events: none;">
+        <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+        <span id="toast-message">저장되었습니다</span>
+    </div>
+
+    <!-- 커스텀 삭제 확인 모달 (기본 브라우저 confirm() 대체) -->
+    <div id="confirm-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm border border-slate-200 overflow-hidden">
+            <div class="p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="bg-rose-50 text-rose-600 rounded-full p-2.5 shrink-0">
+                        <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800">삭제 확인</h3>
+                </div>
+                <p id="confirm-modal-message" class="text-sm text-slate-600 mb-6 leading-relaxed"></p>
+                <div class="flex gap-3">
+                    <button onclick="closeConfirmModal()" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-2.5 rounded-xl transition">취소</button>
+                    <button onclick="_confirmModalOk()" class="flex-1 bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl transition">삭제</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 파이어베이스 설정
         const firebaseConfig = {
@@ -393,7 +460,70 @@
         let expenseChart, annualExpenseChart, annualTrendChart;
         const CATEGORY_COLORS = ['#f43f5e', '#f97316', '#fbbf24', '#34d399', '#3b82f6', '#a78bfa', '#ec4899', '#14b8a6', '#6366f1', '#84cc16', '#0ea5e9', '#eab308'];
 
+        // 자주 쓰이는 주요 카테고리는 색상을 미리 고정 배정 (달이 바뀌거나 항목 순서가 섞여도 항상 같은 색 유지)
+        const FIXED_CATEGORY_COLORS = {
+            '생활비': '#3b82f6',
+            '식비': '#f97316',
+            '주거비': '#a78bfa',
+            '보험료': '#14b8a6',
+            '대출상환': '#f43f5e',
+            '통신비': '#0ea5e9',
+            '교통비': '#fbbf24',
+            '차량유지비': '#84cc16',
+            '저축': '#34d399',
+            '기부': '#ec4899',
+            '용돈': '#6366f1',
+            '기타': '#94a3b8'
+        };
+
+        // 카테고리마다 항상 같은 색상이 배정되도록 고정 매핑 (그래프/리스트 간 색상 불일치 방지)
+        const categoryColorMap = { ...FIXED_CATEGORY_COLORS };
+        let categoryColorIndex = 0;
+        function getCategoryColor(category) {
+            if (!(category in categoryColorMap)) {
+                categoryColorMap[category] = CATEGORY_COLORS[categoryColorIndex % CATEGORY_COLORS.length];
+                categoryColorIndex++;
+            }
+            return categoryColorMap[category];
+        }
+
         window.onload = () => { lucide.createIcons(); loadFirestoreData(); };
+
+        // 모바일 사이드바 열기/닫기
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            document.getElementById('sidebar-overlay').classList.toggle('hidden');
+        }
+
+        // 저장/삭제 완료 토스트 알림 표시
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = message || '저장되었습니다';
+            toast.style.opacity = '1';
+            toast.style.transform = 'translate(-50%, 0)';
+            clearTimeout(window.__toastTimer);
+            window.__toastTimer = setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translate(-50%, -16px)';
+            }, 2200);
+        }
+
+        // 브라우저 기본 confirm() 대신 사용하는 커스텀 삭제 확인 모달
+        let _confirmCallback = null;
+        function showConfirm(message, onConfirm) {
+            document.getElementById('confirm-modal-message').textContent = message;
+            _confirmCallback = onConfirm;
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+            _confirmCallback = null;
+        }
+        function _confirmModalOk() {
+            const cb = _confirmCallback;
+            closeConfirmModal();
+            if (cb) cb();
+        }
 
         // 달력 월 선택 팝오버 토글
         function toggleMonthPicker() {
@@ -454,16 +584,15 @@
             const activeBtn = document.getElementById(`nav-${tabId}`);
             activeBtn.classList.remove('hover:bg-slate-800', 'text-slate-300');
             activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+
+            // 모바일 화면에서는 탭 이동 후 사이드바를 자동으로 닫음
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('-translate-x-full');
+                document.getElementById('sidebar-overlay').classList.add('hidden');
+            }
         }
 
         function getDocId() { return `${currentYear}-${String(currentMonth).padStart(2, '0')}`; }
-
-        function resetToDefaultData() {
-            if(confirm("기존 내역을 모두 지우고 CSV 기본 데이터로 완전히 덮어쓰시겠습니까?")) {
-                monthData = JSON.parse(JSON.stringify(csvDefaultData));
-                saveToFirebase();
-            }
-        }
 
         function loadFirestoreData() {
             document.getElementById('current-month-display').innerText = `${currentYear}. ${String(currentMonth).padStart(2,'0')}`;
@@ -494,11 +623,12 @@
             });
         }
 
-        function saveToFirebase() {
+        function saveToFirebase(message = '저장되었습니다') {
             db.collection('finance_monthly').doc(getDocId()).set(monthData).then(() => {
                 // 저장이 완료되면 상단 대시보드 스펙과 차트만 깔끔하게 동기화 리렌더링
                 calculateKPIsAndCharts();
                 loadAnnualData(); // 해당 연도 데이터가 바뀌었으므로 연간 대시보드도 재계산
+                showToast(message);
             });
         }
 
@@ -523,7 +653,7 @@
             const reads = monthIds.map(id => db.collection('finance_monthly').doc(id).get());
 
             Promise.all(reads).then(docs => {
-                let totalIncome = 0, totalExpense = 0;
+                let totalIncome = 0, totalExpense = 0, totalInvest = 0;
                 const catMap = {};
                 const monthlyIncome = new Array(12).fill(0);
                 const monthlyExpense = new Array(12).fill(0);
@@ -540,13 +670,17 @@
                         const amt = parseInt(e.amount) || 0;
                         totalExpense += amt;
                         monthlyExpense[idx] += amt;
-                        if (e.category) catMap[e.category] = (catMap[e.category] || 0) + amt;
+                        const cat = (e.category || '').trim();
+                        if (cat) catMap[cat] = (catMap[cat] || 0) + amt;
+                    });
+                    (data.investments || []).forEach(iv => {
+                        totalInvest += (parseInt(iv.amount) || 0);
                     });
                 });
 
                 document.getElementById('annual-kpi-income').innerText = '₩ ' + totalIncome.toLocaleString();
                 document.getElementById('annual-kpi-expense').innerText = '₩ ' + totalExpense.toLocaleString();
-                document.getElementById('annual-kpi-surplus').innerText = '₩ ' + (totalIncome - totalExpense).toLocaleString();
+                document.getElementById('annual-kpi-invest').innerText = '₩ ' + totalInvest.toLocaleString();
 
                 annualTrendChart = drawAnnualTrendChart(monthlyIncome, monthlyExpense, annualTrendChart);
                 annualExpenseChart = drawCategoryChart('annualExpenseChart', 'annual-category-list', catMap, annualExpenseChart, 'bar');
@@ -580,33 +714,63 @@
         function renderUI() {
             const inBody = document.getElementById('income-tbody');
             inBody.innerHTML = '';
-            monthData.incomes.sort((a,b)=>a.user.localeCompare(b.user)).forEach(item => {
-                inBody.innerHTML += generateInlineRowHtml(item, 'income');
-            });
+            if (monthData.incomes.length === 0) {
+                inBody.innerHTML = `<tr><td colspan="5" class="text-center text-slate-400 text-sm py-10">등록된 수입 내역이 없습니다.</td></tr>`;
+            } else {
+                monthData.incomes.sort((a,b)=>a.user.localeCompare(b.user)).forEach(item => {
+                    inBody.innerHTML += generateInlineRowHtml(item, 'income');
+                });
+            }
 
             const exBodyHaeun = document.getElementById('expense-tbody-하은');
             const exBodyRuri = document.getElementById('expense-tbody-루리');
             const exBodyCommon = document.getElementById('expense-tbody-공통');
             const commonWrap = document.getElementById('expense-common-wrap');
+
+            // 스크롤 위치를 기억해뒀다가 재렌더링 후 복원 (긴 목록에서 스크롤이 맨 위로 튀는 현상 방지)
+            const scrollHaeun = exBodyHaeun.parentElement.scrollTop;
+            const scrollRuri = exBodyRuri.parentElement.scrollTop;
+            const scrollCommon = exBodyCommon.parentElement.scrollTop;
+
             exBodyHaeun.innerHTML = '';
             exBodyRuri.innerHTML = '';
             exBodyCommon.innerHTML = '';
 
             const sortedExpenses = [...monthData.expenses].sort((a,b) => a.category.localeCompare(b.category));
             const commonItems = [];
+            let sumHaeun = 0, sumRuri = 0, sumCommon = 0;
             sortedExpenses.forEach(item => {
                 const rowHtml = generateInlineRowHtml(item, 'expense', false);
-                if (item.user === '하은') exBodyHaeun.innerHTML += rowHtml;
-                else if (item.user === '루리') exBodyRuri.innerHTML += rowHtml;
-                else { exBodyCommon.innerHTML += rowHtml; commonItems.push(item); }
+                const amt = parseInt(item.amount) || 0;
+                if (item.user === '하은') { exBodyHaeun.innerHTML += rowHtml; sumHaeun += amt; }
+                else if (item.user === '루리') { exBodyRuri.innerHTML += rowHtml; sumRuri += amt; }
+                else { exBodyCommon.innerHTML += rowHtml; commonItems.push(item); sumCommon += amt; }
             });
             commonWrap.classList.toggle('hidden', commonItems.length === 0);
 
+            const emptyExpenseRow = `<tr><td colspan="4" class="text-center text-slate-400 text-sm py-10">등록된 지출/고정비가 없습니다.</td></tr>`;
+            if (!exBodyHaeun.innerHTML) exBodyHaeun.innerHTML = emptyExpenseRow;
+            if (!exBodyRuri.innerHTML) exBodyRuri.innerHTML = emptyExpenseRow;
+
+            document.getElementById('expense-total-하은').innerText = '₩ ' + sumHaeun.toLocaleString();
+            document.getElementById('expense-total-루리').innerText = '₩ ' + sumRuri.toLocaleString();
+            const commonTotalEl = document.getElementById('expense-total-공통');
+            if (commonTotalEl) commonTotalEl.innerText = '₩ ' + sumCommon.toLocaleString();
+
+            // 스크롤 위치 복원
+            exBodyHaeun.parentElement.scrollTop = scrollHaeun;
+            exBodyRuri.parentElement.scrollTop = scrollRuri;
+            exBodyCommon.parentElement.scrollTop = scrollCommon;
+
             const invBody = document.getElementById('invest-tbody');
             invBody.innerHTML = '';
-            monthData.investments.forEach(item => {
-                invBody.innerHTML += generateInlineRowHtml(item, 'invest');
-            });
+            if (monthData.investments.length === 0) {
+                invBody.innerHTML = `<tr><td colspan="5" class="text-center text-slate-400 text-sm py-10">등록된 투자 내역이 없습니다.</td></tr>`;
+            } else {
+                monthData.investments.forEach(item => {
+                    invBody.innerHTML += generateInlineRowHtml(item, 'invest');
+                });
+            }
 
             lucide.createIcons();
             calculateKPIsAndCharts();
@@ -668,6 +832,8 @@
 
             if (field === 'amount') {
                 value = parseInt(value) || 0;
+            } else if (typeof value === 'string') {
+                value = value.trim();
             }
 
             // 기존 값과 완전히 동일하면 불필요한 트래픽/DB 차단
@@ -692,7 +858,8 @@
 
             const catMap = {};
             monthData.expenses.forEach(ex => {
-                if(ex.category) catMap[ex.category] = (catMap[ex.category] || 0) + (parseInt(ex.amount) || 0);
+                const cat = (ex.category || '').trim();
+                if(cat) catMap[cat] = (catMap[cat] || 0) + (parseInt(ex.amount) || 0);
             });
             expenseChart = drawCategoryChart('expenseChart', 'category-list', catMap, expenseChart, 'doughnut');
         }
@@ -703,8 +870,8 @@
             const newItem = {
                 id: Date.now().toString(),
                 user: document.getElementById('form-user').value,
-                category: document.getElementById('form-category').value,
-                name: document.getElementById('form-name').value,
+                category: document.getElementById('form-category').value.trim(),
+                name: document.getElementById('form-name').value.trim(),
                 amount: parseInt(document.getElementById('form-amount').value) || 0
             };
 
@@ -713,18 +880,30 @@
             else monthData.investments.push(newItem);
 
             closeModal();
-            saveToFirebase();
+            saveToFirebase('추가되었습니다');
             renderUI(); // 새로 추가 시 목록 갱신
         }
 
         function deleteItem(type, id) {
-            if(!confirm("해당 내역을 삭제하시겠습니까?")) return;
-            if(type === 'income') monthData.incomes = monthData.incomes.filter(i => i.id !== id);
-            else if(type === 'expense') monthData.expenses = monthData.expenses.filter(i => i.id !== id);
-            else monthData.investments = monthData.investments.filter(i => i.id !== id);
-            
-            saveToFirebase();
-            renderUI(); // 삭제 시 목록 즉각 리프레시
+            showConfirm('해당 내역을 삭제하시겠습니까?', () => {
+                if(type === 'income') monthData.incomes = monthData.incomes.filter(i => i.id !== id);
+                else if(type === 'expense') monthData.expenses = monthData.expenses.filter(i => i.id !== id);
+                else monthData.investments = monthData.investments.filter(i => i.id !== id);
+
+                saveToFirebase('삭제되었습니다');
+                renderUI(); // 삭제 시 목록 즉각 리프레시
+            });
+        }
+
+        // 담당자(하은/루리/공통)별 지출 및 고정비 항목을 한 번에 전체 삭제
+        function deleteAllExpenses(user) {
+            const count = monthData.expenses.filter(e => e.user === user).length;
+            if (count === 0) { showToast(`${user}의 지출/고정비 항목이 없습니다`); return; }
+            showConfirm(`${user}의 지출 및 고정비 ${count}건을 전체 삭제하시겠습니까? 되돌릴 수 없습니다.`, () => {
+                monthData.expenses = monthData.expenses.filter(e => e.user !== user);
+                saveToFirebase('삭제되었습니다');
+                renderUI();
+            });
         }
 
         // 카테고리별 지출 비율을 도넛 또는 막대 차트로 그리고, 금액/퍼센트가 함께 보이는 리스트를 함께 그리는 공용 함수
@@ -733,10 +912,33 @@
             const total = entries.reduce((sum, [, amt]) => sum + amt, 0);
             const labels = entries.map(([cat]) => cat);
             const values = entries.map(([, amt]) => amt);
-            const colors = labels.map((_, i) => CATEGORY_COLORS[i % CATEGORY_COLORS.length]);
+            const colors = labels.map(cat => getCategoryColor(cat));
+
+            const canvasEl = document.getElementById(canvasId);
+            const emptyEl = document.getElementById(canvasId + '-empty');
+            const listEl = document.getElementById(listId);
 
             if (chartInstance) chartInstance.destroy();
-            const ctx = document.getElementById(canvasId).getContext('2d');
+
+            // 등록된 지출이 없으면 차트를 그리지 않고 안내 문구만 표시 (빈 캔버스로 남는 것 방지)
+            if (entries.length === 0) {
+                if (canvasEl) canvasEl.style.display = 'none';
+                if (emptyEl) emptyEl.classList.remove('hidden');
+                if (listEl) listEl.innerHTML = `<p class="text-sm text-slate-400 text-center py-8">등록된 지출 카테고리가 없습니다.</p>`;
+                return null;
+            }
+            if (canvasEl) canvasEl.style.display = '';
+            if (emptyEl) emptyEl.classList.add('hidden');
+
+            // 연간 막대그래프는 카테고리 개수만큼 높이를 늘려서 막대와 항목명이 1:1로 정확히 매칭되도록 조정
+            if (chartType === 'bar' && canvasEl) {
+                const wrap = canvasEl.parentElement;
+                if (wrap && wrap.id === (canvasId + '-wrap')) {
+                    wrap.style.height = Math.max(220, entries.length * 34) + 'px';
+                }
+            }
+
+            const ctx = canvasEl.getContext('2d');
 
             const tooltipLabel = (ctx) => {
                 const val = chartType === 'bar' ? ctx.parsed.x : ctx.parsed;
@@ -774,27 +976,22 @@
 
             const newChart = new Chart(ctx, chartConfig);
 
-            const listEl = document.getElementById(listId);
             if (listEl) {
-                if (entries.length === 0) {
-                    listEl.innerHTML = `<p class="text-sm text-slate-400 text-center py-8">등록된 지출 카테고리가 없습니다.</p>`;
-                } else {
-                    listEl.innerHTML = entries.map(([cat, amt], i) => {
-                        const pct = total > 0 ? (amt / total * 100).toFixed(1) : '0.0';
-                        return `
-                            <div class="flex items-center justify-between text-sm py-1.5 border-b border-slate-50 last:border-0">
-                                <div class="flex items-center gap-2 min-w-0">
-                                    <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color:${colors[i]}"></span>
-                                    <span class="font-medium text-slate-700 truncate">${cat}</span>
-                                </div>
-                                <div class="flex items-center gap-2 shrink-0 ml-2">
-                                    <span class="font-bold text-slate-800">₩${amt.toLocaleString()}</span>
-                                    <span class="text-xs font-semibold text-slate-400 w-12 text-right">${pct}%</span>
-                                </div>
+                listEl.innerHTML = entries.map(([cat, amt], i) => {
+                    const pct = total > 0 ? (amt / total * 100).toFixed(1) : '0.0';
+                    return `
+                        <div class="flex items-center justify-between text-sm py-1.5 border-b border-slate-50 last:border-0">
+                            <div class="flex items-center gap-2 min-w-0">
+                                <span class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color:${colors[i]}"></span>
+                                <span class="font-medium text-slate-700 truncate">${cat}</span>
                             </div>
-                        `;
-                    }).join('');
-                }
+                            <div class="flex items-center gap-2 shrink-0 ml-2">
+                                <span class="font-bold text-slate-800">₩${amt.toLocaleString()}</span>
+                                <span class="text-xs font-semibold text-slate-400 w-12 text-right">${pct}%</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
             }
 
             return newChart;
