@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Finance Hub</title>
+    <title>Haru 🩷 우리집 가계부</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -31,17 +31,36 @@
         input[type=number] { -moz-appearance: textfield; }
     </style>
 </head>
-<body class="bg-slate-50 h-screen flex overflow-hidden text-slate-800">
+<body class="bg-slate-200 min-h-screen flex items-center justify-center p-4 selection:bg-slate-800 selection:text-white overflow-hidden text-slate-800">
+
+    <div class="w-full max-w-[1400px] h-[92vh] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden relative border border-slate-200">
+
+        <div class="h-12 bg-slate-50 border-b border-slate-200 flex items-center justify-between px-6 shrink-0 z-30">
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-400/80 hover:bg-red-500 transition-colors"></div>
+                <div class="w-3 h-3 rounded-full bg-amber-400/80 hover:bg-amber-500 transition-colors"></div>
+                <div class="w-3 h-3 rounded-full bg-green-400/80 hover:bg-green-500 transition-colors"></div>
+            </div>
+            <div class="flex-1 max-w-xl bg-white border border-slate-200 rounded-md h-7 flex items-center justify-center text-xs text-slate-400 tracking-wide mx-4">
+                <i data-lucide="lock" class="w-3 h-3 mr-2 opacity-50"></i> haru.love/우리집가계부 🏠
+            </div>
+            <div class="w-14"></div>
+        </div>
+
+        <div class="flex flex-1 overflow-hidden">
 
     <div id="sidebar-overlay" onclick="toggleSidebar()" class="hidden fixed inset-0 bg-black/40 z-20 md:hidden"></div>
 
     <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col shadow-xl z-30 shrink-0 transition-transform duration-300 fixed md:static inset-y-0 left-0 -translate-x-full md:translate-x-0 h-full">
-        <div class="h-20 flex items-center px-6 border-b border-slate-800">
+        <div class="h-24 flex items-center px-6 border-b border-slate-800">
             <div class="flex items-center gap-3 text-white">
-                <div class="bg-blue-600 p-2 rounded-xl shadow-lg shadow-blue-500/30">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+                <div class="bg-gradient-to-br from-pink-500 to-rose-600 p-2 rounded-xl shadow-lg shadow-pink-500/30">
+                    <i data-lucide="heart" class="w-5 h-5"></i>
                 </div>
-                <span class="text-xl font-bold tracking-wide">Finance Hub</span>
+                <div class="flex flex-col leading-tight">
+                    <span class="text-xl font-bold tracking-wide flex items-center gap-1">Haru <span class="text-rose-400">🩷</span></span>
+                    <span class="text-[11px] font-medium text-slate-400 tracking-wide">경제적 자유를 위하여</span>
+                </div>
             </div>
         </div>
 
@@ -317,6 +336,9 @@
             </div>
 
         </main>
+    </div>
+
+        </div>
     </div>
 
     <div id="data-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 hidden transition-opacity">
