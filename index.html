@@ -193,6 +193,19 @@
                             <div id="category-list" class="space-y-2.5 max-h-[280px] overflow-y-auto pr-2"></div>
                         </div>
                     </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mt-6">
+                        <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2"><i data-lucide="line-chart" class="w-5 h-5 text-purple-500"></i> 투자 포트폴리오 비율</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                            <div class="h-[280px] w-full relative">
+                                <canvas id="investChart"></canvas>
+                                <div id="investChart-empty" class="hidden absolute inset-0 flex flex-col items-center justify-center text-slate-400 gap-2">
+                                    <i data-lucide="inbox" class="w-8 h-8"></i>
+                                    <p class="text-sm font-medium">등록된 투자 내역이 없습니다</p>
+                                </div>
+                            </div>
+                            <div id="invest-category-list" class="space-y-2.5 max-h-[280px] overflow-y-auto pr-2"></div>
+                        </div>
+                    </div>
                 </section>
 
             </div>
@@ -479,7 +492,7 @@
         let pickerYear = currentYear;
         let monthData = { incomes: [], expenses: [], investments: [] };
         let unsubscribe = null;
-        let expenseChart, annualExpenseChart, annualTrendChart;
+        let expenseChart, annualExpenseChart, annualTrendChart, investChart;
         const CATEGORY_COLORS = ['#f43f5e', '#f97316', '#fbbf24', '#34d399', '#3b82f6', '#a78bfa', '#ec4899', '#14b8a6', '#6366f1', '#84cc16', '#0ea5e9', '#eab308'];
 
         // 자주 쓰이는 주요 카테고리는 색상을 미리 고정 배정 (달이 바뀌거나 항목 순서가 섞여도 항상 같은 색 유지)
@@ -679,6 +692,7 @@
                 const catMap = {};
                 const monthlyIncome = new Array(12).fill(0);
                 const monthlyExpense = new Array(12).fill(0);
+                const monthlyInvest = new Array(12).fill(0);
 
                 docs.forEach((doc, idx) => {
                     if (!doc.exists) return;
@@ -696,7 +710,9 @@
                         if (cat) catMap[cat] = (catMap[cat] || 0) + amt;
                     });
                     (data.investments || []).forEach(iv => {
-                        totalInvest += (parseInt(iv.amount) || 0);
+                        const amt = parseInt(iv.amount) || 0;
+                        totalInvest += amt;
+                        monthlyInvest[idx] += amt;
                     });
                 });
 
@@ -704,13 +720,13 @@
                 document.getElementById('annual-kpi-expense').innerText = '₩ ' + totalExpense.toLocaleString();
                 document.getElementById('annual-kpi-invest').innerText = '₩ ' + totalInvest.toLocaleString();
 
-                annualTrendChart = drawAnnualTrendChart(monthlyIncome, monthlyExpense, annualTrendChart);
+                annualTrendChart = drawAnnualTrendChart(monthlyIncome, monthlyExpense, monthlyInvest, annualTrendChart);
                 annualExpenseChart = drawCategoryChart('annualExpenseChart', 'annual-category-list', catMap, annualExpenseChart, 'bar');
             });
         }
 
         // 연간 월별 수입/지출 추이를 그룹 막대그래프로 표시 (1월~12월)
-        function drawAnnualTrendChart(monthlyIncome, monthlyExpense, chartInstance) {
+        function drawAnnualTrendChart(monthlyIncome, monthlyExpense, monthlyInvest, chartInstance) {
             if (chartInstance) chartInstance.destroy();
             const ctx = document.getElementById('annualTrendChart').getContext('2d');
             return new Chart(ctx, {
@@ -719,7 +735,8 @@
                     labels: Array.from({length: 12}, (_, i) => `${i+1}월`),
                     datasets: [
                         { label: '수입', data: monthlyIncome, backgroundColor: '#3b82f6', borderRadius: 4 },
-                        { label: '지출', data: monthlyExpense, backgroundColor: '#f43f5e', borderRadius: 4 }
+                        { label: '지출', data: monthlyExpense, backgroundColor: '#f43f5e', borderRadius: 4 },
+                        { label: '투자', data: monthlyInvest, backgroundColor: '#a78bfa', borderRadius: 4 }
                     ]
                 },
                 options: {
@@ -884,6 +901,13 @@
                 if(cat) catMap[cat] = (catMap[cat] || 0) + (parseInt(ex.amount) || 0);
             });
             expenseChart = drawCategoryChart('expenseChart', 'category-list', catMap, expenseChart, 'doughnut');
+
+            const investMap = {};
+            monthData.investments.forEach(iv => {
+                const cat = (iv.category || '').trim() || '기타';
+                investMap[cat] = (investMap[cat] || 0) + (parseInt(iv.amount) || 0);
+            });
+            investChart = drawCategoryChart('investChart', 'invest-category-list', investMap, investChart, 'doughnut');
         }
 
         function createNewData(e) {
