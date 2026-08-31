@@ -77,6 +77,9 @@
             <button onclick="switchTab('invest')" id="nav-invest" class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-800 hover:text-white rounded-xl transition-all font-medium text-left">
                 <i data-lucide="line-chart" class="w-5 h-5 text-purple-400"></i> 투자 내역
             </button>
+            <button onclick="switchTab('chat')" id="nav-chat" class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-800 hover:text-white rounded-xl transition-all font-medium text-left">
+                <i data-lucide="message-circle" class="w-5 h-5 text-sky-400"></i> 코멘트
+            </button>
         </nav>
     </aside>
 
@@ -212,8 +215,11 @@
 
             <div id="tab-income" class="tab-content max-w-6xl mx-auto">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
+                    <div class="px-6 py-5 border-b border-slate-100 flex items-center justify-between gap-2">
                         <h3 class="text-lg font-bold text-slate-800">이번 달 수입 리스트 <span class="text-xs text-slate-400 font-normal ml-2">* 테이블 내부를 누르면 바로 수정 및 자동 저장됩니다.</span></h3>
+                        <button onclick="openModal('income', null, null, 'extra')" class="shrink-0 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                            <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 추가 수입 (야근수당 등)
+                        </button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left table-fixed">
@@ -242,6 +248,9 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <span id="expense-total-하은" class="text-sm font-extrabold text-rose-600">₩ 0</span>
+                                <button onclick="openModal('expense','하은','extra')" class="text-xs font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 추가 지출
+                                </button>
                                 <button onclick="deleteAllExpenses('하은')" class="text-xs font-semibold text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 전체삭제
                                 </button>
@@ -269,6 +278,9 @@
                             </div>
                             <div class="flex items-center gap-3">
                                 <span id="expense-total-루리" class="text-sm font-extrabold text-rose-600">₩ 0</span>
+                                <button onclick="openModal('expense','루리','extra')" class="text-xs font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                    <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 추가 지출
+                                </button>
                                 <button onclick="deleteAllExpenses('루리')" class="text-xs font-semibold text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 전체삭제
                                 </button>
@@ -298,6 +310,9 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <span id="expense-total-공통" class="text-sm font-extrabold text-rose-600">₩ 0</span>
+                            <button onclick="openModal('expense','공통','extra')" class="text-xs font-semibold text-amber-600 hover:text-amber-700 hover:bg-amber-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+                                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> 추가 지출
+                            </button>
                             <button onclick="deleteAllExpenses('공통')" class="text-xs font-semibold text-slate-400 hover:text-rose-600 hover:bg-rose-50 px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
                                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 전체삭제
                             </button>
@@ -339,12 +354,37 @@
                                     <th class="w-44 px-6 py-4 font-semibold">계좌/유형</th>
                                     <th class="px-6 py-4 font-semibold">종목/항목명</th>
                                     <th class="w-48 px-6 py-4 font-semibold text-right">투자금액</th>
-                                    <th class="w-20 px-6 py-4 font-semibold text-center">삭제</th>
+                                    <th class="w-28 px-6 py-4 font-semibold text-center">관리</th>
                                 </tr>
                             </thead>
                             <tbody id="invest-tbody" class="divide-y divide-slate-100"></tbody>
                         </table>
                     </div>
+                </div>
+            </div>
+
+            <div id="tab-chat" class="tab-content max-w-3xl mx-auto h-full">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[75vh]">
+                    <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
+                        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                            <i data-lucide="message-circle" class="w-5 h-5 text-sky-500"></i> 코멘트
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs text-slate-400">나는</span>
+                            <select id="chat-my-name" onchange="setChatIdentity(this.value)" class="text-xs font-bold border border-slate-200 rounded-lg px-2 py-1.5 outline-none focus:border-sky-500 bg-slate-50 cursor-pointer">
+                                <option value="하은">하은</option>
+                                <option value="루리">루리</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="chat-messages" class="flex-1 overflow-y-auto px-6 py-4"></div>
+                    <form onsubmit="sendChatMessage(event)" class="border-t border-slate-100 px-4 py-3 flex items-center gap-2 shrink-0">
+                        <input type="text" id="chat-input" placeholder="메시지를 입력하세요" autocomplete="off"
+                            class="flex-1 bg-slate-100 rounded-full px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-sky-400 transition">
+                        <button type="submit" class="bg-sky-500 hover:bg-sky-600 text-white p-2.5 rounded-full transition shrink-0">
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -364,7 +404,7 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-500 mb-1.5">유형</label>
-                        <select id="form-type" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition bg-slate-50">
+                        <select id="form-type" onchange="toggleExpenseTypeField()" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition bg-slate-50">
                             <option value="income">수입 (Income)</option>
                             <option value="expense" selected>지출/고정비 (Expense)</option>
                             <option value="invest">투자 (Investment)</option>
@@ -379,9 +419,30 @@
                         </select>
                     </div>
                 </div>
-                <div>
+                <div id="form-expense-type-wrap">
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">구분</label>
+                    <select id="form-expense-type" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition bg-slate-50">
+                        <option value="fixed">고정비 (매달 반복)</option>
+                        <option value="extra">추가 지출 (이번 달만)</option>
+                    </select>
+                </div>
+                <div id="form-income-type-wrap" class="hidden">
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">구분</label>
+                    <select id="form-income-type" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition bg-slate-50">
+                        <option value="fixed">정기 수입 (매달 반복)</option>
+                        <option value="extra">추가 수입 (이번 달만, 야근수당 등)</option>
+                    </select>
+                </div>
+                <div class="relative">
                     <label class="block text-xs font-bold text-slate-500 mb-1.5">카테고리</label>
-                    <input type="text" id="form-category" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition" required autocomplete="off">
+                    <input type="text" id="form-category"
+                        class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition"
+                        placeholder="검색 또는 새 카테고리 입력"
+                        required autocomplete="off"
+                        onfocus="openCategoryDropdownForForm(this)"
+                        onclick="openCategoryDropdownForForm(this)"
+                        oninput="filterCategoryDropdown(this)"
+                        onkeydown="handleCategoryKeydown(event)">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1.5">상세 항목명</label>
@@ -402,6 +463,35 @@
     <div id="toast" class="fixed top-6 left-1/2 bg-slate-900 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-2 transition-all duration-300" style="transform: translate(-50%, -16px); opacity: 0; pointer-events: none;">
         <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
         <span id="toast-message">저장되었습니다</span>
+    </div>
+
+    <!-- 카테고리 검색형 드롭다운 (수입/지출/투자 카테고리 입력칸 공용) -->
+    <div id="category-dropdown" class="hidden fixed bg-white rounded-xl shadow-2xl border border-slate-200 z-50 py-1 max-h-56 overflow-y-auto">
+        <div id="category-dropdown-list"></div>
+        <p id="category-dropdown-hint" class="hidden px-3 py-2 text-[11px] text-slate-400 border-t border-slate-100">찾는 카테고리가 없으면 직접 입력해서 추가할 수 있어요</p>
+        <button type="button" id="category-dropdown-add" onmousedown="addNewCategoryOption(event)" class="hidden w-full text-left px-3 py-2 text-sm font-semibold text-blue-600 hover:bg-blue-50 border-t border-slate-100 items-center gap-1.5">
+            <span id="category-dropdown-add-label"></span>
+        </button>
+    </div>
+
+    <!-- N월 투자: 이번 달 투자금 대체 입력 모달 -->
+    <div id="invest-extra-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-5 bg-white border-b border-slate-100 flex justify-between items-center">
+                <h3 id="invest-extra-modal-title" class="font-bold text-lg text-slate-800">이번 달 투자금 수정</h3>
+                <button type="button" onclick="closeInvestExtraModal()" class="text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 p-1.5 rounded-lg transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form onsubmit="submitInvestExtra(event)" class="p-6 space-y-4">
+                <p id="invest-extra-modal-desc" class="text-sm text-slate-500 leading-relaxed"></p>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 mb-1.5">이번 달 투자금 (기본 금액을 대체 — 더해지지 않아요)</label>
+                    <input type="number" id="invest-extra-amount" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-purple-500 transition" required autocomplete="off">
+                </div>
+                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-purple-500/30 transition mt-2">
+                    투자금 반영하기
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- 커스텀 삭제 확인 모달 (기본 브라우저 confirm() 대체) -->
@@ -492,6 +582,11 @@
         let pickerYear = currentYear;
         let monthData = { incomes: [], expenses: [], investments: [] };
         let unsubscribe = null;
+        let categoryOptions = { income: [], expense: [], invest: [] };
+        let categoryUnsubscribe = null;
+        let chatMessages = [];
+        let chatUnsubscribe = null;
+        let chatIdentity = (() => { try { return localStorage.getItem('haru_chat_identity') || '하은'; } catch (e) { return '하은'; } })();
         let expenseChart, annualExpenseChart, annualTrendChart, investChart;
         const CATEGORY_COLORS = ['#f43f5e', '#f97316', '#fbbf24', '#34d399', '#3b82f6', '#a78bfa', '#ec4899', '#14b8a6', '#6366f1', '#84cc16', '#0ea5e9', '#eab308'];
 
@@ -522,7 +617,38 @@
             return categoryColorMap[category];
         }
 
-        window.onload = () => { lucide.createIcons(); loadFirestoreData(); };
+        window.onload = () => {
+            lucide.createIcons();
+            loadFirestoreData();
+            loadCategoryOptions();
+            document.getElementById('chat-my-name').value = chatIdentity;
+            loadChatMessages();
+        };
+
+        // 카테고리 드롭다운 옵션 목록: 최초 실행 시 기존 고정비/수입 템플릿의 카테고리로 초기화
+        function seedDefaultCategoryOptions() {
+            const uniq = arr => [...new Set(arr.map(v => (v || '').trim()).filter(Boolean))];
+            return {
+                income: uniq(csvDefaultData.incomes.map(i => i.category)),
+                expense: uniq(csvDefaultData.expenses.map(e => e.category)),
+                invest: ['주식', '펀드', '적금/예금', '연금', '부동산', '가상자산', '기타']
+            };
+        }
+
+        function loadCategoryOptions() {
+            const ref = db.collection('finance_meta').doc('categories');
+            if (categoryUnsubscribe) categoryUnsubscribe();
+            categoryUnsubscribe = ref.onSnapshot(doc => {
+                if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+                if (doc.exists) {
+                    const d = doc.data();
+                    categoryOptions = { income: d.income || [], expense: d.expense || [], invest: d.invest || [] };
+                } else {
+                    categoryOptions = seedDefaultCategoryOptions();
+                    ref.set(categoryOptions);
+                }
+            });
+        }
 
         // 모바일 사이드바 열기/닫기
         function toggleSidebar() {
@@ -625,6 +751,12 @@
                 document.getElementById('sidebar').classList.add('-translate-x-full');
                 document.getElementById('sidebar-overlay').classList.add('hidden');
             }
+
+            // 코멘트 탭으로 이동하면 항상 최신 메시지가 보이도록 맨 아래로 스크롤
+            if (tabId === 'chat') {
+                const chatEl = document.getElementById('chat-messages');
+                if (chatEl) setTimeout(() => { chatEl.scrollTop = chatEl.scrollHeight; }, 0);
+            }
         }
 
         function getDocId() { return `${currentYear}-${String(currentMonth).padStart(2, '0')}`; }
@@ -710,7 +842,7 @@
                         if (cat) catMap[cat] = (catMap[cat] || 0) + amt;
                     });
                     (data.investments || []).forEach(iv => {
-                        const amt = parseInt(iv.amount) || 0;
+                        const amt = investItemTotal(iv);
                         totalInvest += amt;
                         monthlyInvest[idx] += amt;
                     });
@@ -823,6 +955,24 @@
             let sign = type === 'income' ? '+' : type === 'expense' ? '-' : '';
             let pad = showUser ? 'px-6' : 'px-4';
 
+            // 지출/수입: 고정이 아닌 '추가' 항목에는 몇 월에 등록됐는지 배지로 표시
+            const isExtraItem = (type === 'expense' && item.expenseType === 'extra') || (type === 'income' && item.incomeType === 'extra');
+            const extraExpenseBadge = isExtraItem
+                ? `<span class="shrink-0 bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md text-[10px] font-bold tracking-wide mr-1.5">추가·${item.month || currentMonth}월</span>`
+                : '';
+
+            // 투자: 이번 달 값이 "대체"되어 있으면(더하는 게 아니라 교체) 기본금액은 참고용으로만 작게 표시
+            const hasMonthlyOverride = type === 'invest' && item.monthlyInvested && item.monthlyOverrideAmount != null;
+            const investExtraBreakdown = hasMonthlyOverride
+                ? `<div class="text-[10px] text-purple-500 font-semibold text-right mt-0.5">기본 ₩${(parseInt(item.amount) || 0).toLocaleString()} (유지됨)</div>`
+                : '';
+            const investMonthlyBtn = type === 'invest'
+                ? `<button onclick="openInvestExtraModal('${item.id}')" class="w-full text-[10px] font-bold px-2 py-1 rounded-lg transition ${hasMonthlyOverride ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100' : 'bg-purple-50 text-purple-600 hover:bg-purple-100'}">${hasMonthlyOverride ? `✓ ${currentMonth}월 완료` : `${currentMonth}월 투자`}</button>`
+                : '';
+            // 이번 달 값이 대체되어 있는 항목은 기본 금액 칸을 잠가서, 인라인 수정으로 기본값을 건드리는 걸 방지
+            const investAmountLocked = hasMonthlyOverride;
+            const investDisplayAmount = hasMonthlyOverride ? item.monthlyOverrideAmount : item.amount;
+
             return `
                 <tr class="hover:bg-slate-50/80 transition border-b border-slate-100">
                     ${showUser ? `
@@ -834,30 +984,41 @@
                         </select>
                     </td>` : ''}
                     <td class="${pad} py-3">
-                        <input type="text" value="${item.category}" 
+                        <input type="text" value="${item.category}"
                             class="w-full bg-transparent border border-transparent hover:border-slate-200 focus:border-blue-500 focus:bg-white px-2 py-1 rounded-lg outline-none text-slate-600 font-medium text-sm transition"
                             onblur="updateInlineData('${type}', '${item.id}', 'category', this.value)"
-                            onkeydown="if(event.key==='Enter') this.blur()">
+                            onfocus="openCategoryDropdown(this, '${type}', '${item.id}')"
+                            onclick="openCategoryDropdown(this, '${type}', '${item.id}')"
+                            oninput="filterCategoryDropdown(this)"
+                            onkeydown="handleCategoryKeydown(event)">
                     </td>
                     <td class="${pad} py-3">
-                        <input type="text" value="${item.name}" 
-                            class="w-full bg-transparent border border-transparent hover:border-slate-200 focus:border-blue-500 focus:bg-white px-2 py-1 rounded-lg outline-none text-slate-800 font-semibold text-sm transition"
-                            onblur="updateInlineData('${type}', '${item.id}', 'name', this.value)"
-                            onkeydown="if(event.key==='Enter') this.blur()">
+                        <div class="flex items-center">
+                            ${extraExpenseBadge}
+                            <input type="text" value="${item.name}"
+                                class="w-full bg-transparent border border-transparent hover:border-slate-200 focus:border-blue-500 focus:bg-white px-2 py-1 rounded-lg outline-none text-slate-800 font-semibold text-sm transition"
+                                onblur="updateInlineData('${type}', '${item.id}', 'name', this.value)"
+                                onkeydown="if(event.key==='Enter') this.blur()">
+                        </div>
                     </td>
                     <td class="${pad} py-3">
                         <div class="flex items-center justify-end font-bold ${amountClass} text-sm">
                             <span class="mr-1 opacity-70">${sign}</span>
-                            <input type="number" value="${item.amount}" 
-                                class="w-28 bg-transparent text-right border border-transparent hover:border-slate-200 focus:border-blue-500 focus:bg-white px-2 py-1 rounded-lg outline-none font-bold tracking-tight transition"
-                                onblur="updateInlineData('${type}', '${item.id}', 'amount', this.value)"
+                            <input type="number" value="${type === 'invest' ? investDisplayAmount : item.amount}"
+                                ${investAmountLocked ? 'readonly title="이번 달 투자금이 대체된 항목은 기본 금액을 직접 수정할 수 없어요. N월 투자 버튼에서 제거 후 다시 시도하세요."' : ''}
+                                class="w-28 bg-transparent text-right border border-transparent px-2 py-1 rounded-lg outline-none font-bold tracking-tight transition ${investAmountLocked ? 'cursor-not-allowed' : 'hover:border-slate-200 focus:border-blue-500 focus:bg-white'}"
+                                ${investAmountLocked ? '' : `onblur="updateInlineData('${type}', '${item.id}', 'amount', this.value)"`}
                                 onkeydown="if(event.key==='Enter') this.blur()">
                         </div>
+                        ${investExtraBreakdown}
                     </td>
                     <td class="${pad} py-3 text-center">
-                        <button onclick="deleteItem('${type}', '${item.id}')" class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
+                        <div class="flex flex-col items-center gap-1.5">
+                            ${investMonthlyBtn}
+                            <button onclick="deleteItem('${type}', '${item.id}')" class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `;
@@ -888,7 +1049,7 @@
 
             monthData.incomes.forEach(i => totalIncome += (parseInt(i.amount) || 0));
             monthData.expenses.forEach(e => totalExpense += (parseInt(e.amount) || 0));
-            monthData.investments.forEach(iv => totalInvest += (parseInt(iv.amount) || 0));
+            monthData.investments.forEach(iv => totalInvest += investItemTotal(iv));
 
             document.getElementById('kpi-income').innerText = '₩ ' + totalIncome.toLocaleString();
             document.getElementById('kpi-expense').innerText = '₩ ' + totalExpense.toLocaleString();
@@ -905,7 +1066,7 @@
             const investMap = {};
             monthData.investments.forEach(iv => {
                 const cat = (iv.category || '').trim() || '기타';
-                investMap[cat] = (investMap[cat] || 0) + (parseInt(iv.amount) || 0);
+                investMap[cat] = (investMap[cat] || 0) + investItemTotal(iv);
             });
             investChart = drawCategoryChart('investChart', 'invest-category-list', investMap, investChart, 'doughnut');
         }
@@ -921,8 +1082,16 @@
                 amount: parseInt(document.getElementById('form-amount').value) || 0
             };
 
-            if(type === 'income') monthData.incomes.push(newItem);
-            else if(type === 'expense') monthData.expenses.push(newItem);
+            if(type === 'income') {
+                newItem.incomeType = document.getElementById('form-income-type').value === 'extra' ? 'extra' : 'fixed';
+                if (newItem.incomeType === 'extra') { newItem.month = currentMonth; newItem.year = currentYear; }
+                monthData.incomes.push(newItem);
+            }
+            else if(type === 'expense') {
+                newItem.expenseType = document.getElementById('form-expense-type').value === 'extra' ? 'extra' : 'fixed';
+                if (newItem.expenseType === 'extra') { newItem.month = currentMonth; newItem.year = currentYear; }
+                monthData.expenses.push(newItem);
+            }
             else monthData.investments.push(newItem);
 
             closeModal();
@@ -1043,13 +1212,284 @@
             return newChart;
         }
 
-        function openModal() {
+        // 유형이 '지출/고정비'/'수입'일 때만 각각의 구분(고정/추가) 선택 필드를 노출
+        function toggleExpenseTypeField() {
+            const currentFormType = document.getElementById('form-type').value;
+            const isExpense = currentFormType === 'expense';
+            const isIncome = currentFormType === 'income';
+            document.getElementById('form-expense-type-wrap').classList.toggle('hidden', !isExpense);
+            document.getElementById('form-income-type-wrap').classList.toggle('hidden', !isIncome);
+
+            // 카테고리 드롭다운이 열려있는 상태로 유형을 바꾸면, 옵션 목록도 새 유형 기준으로 즉시 갱신
+            if (_catDropdownTarget && _catDropdownTarget.inputEl.id === 'form-category') {
+                _catDropdownTarget.type = document.getElementById('form-type').value;
+                renderCategoryDropdown(true);
+            }
+        }
+
+        // presetType/presetUser/presetExpenseType: 각 지출 카드의 "+ 추가 지출" 버튼에서 미리 값 채워서 열기 위함
+        function openModal(presetType, presetUser, presetExpenseType, presetIncomeType) {
             document.getElementById('form-category').value = '';
             document.getElementById('form-name').value = '';
             document.getElementById('form-amount').value = '';
+            if (presetType) document.getElementById('form-type').value = presetType;
+            if (presetUser) document.getElementById('form-user').value = presetUser;
+            document.getElementById('form-expense-type').value = presetExpenseType || 'fixed';
+            document.getElementById('form-income-type').value = presetIncomeType || 'fixed';
+            toggleExpenseTypeField();
             document.getElementById('data-modal').classList.remove('hidden');
         }
         function closeModal() { document.getElementById('data-modal').classList.add('hidden'); }
+
+        // 투자 항목별 이번 달 실적용 금액: "N월 투자"로 대체값이 지정돼 있으면 그 값, 아니면 기본 금액 그대로 (더하지 않음)
+        function investItemTotal(item) {
+            if (item.monthlyInvested && item.monthlyOverrideAmount != null) {
+                return parseInt(item.monthlyOverrideAmount) || 0;
+            }
+            return parseInt(item.amount) || 0;
+        }
+
+        let _investExtraTargetId = null;
+
+        // "N월 투자" 버튼 클릭: 이미 이번 달에 대체값이 반영된 항목이면 제거(기본금액 복귀) 확인 후, 아니면 바로 입력 모달 오픈
+        function openInvestExtraModal(id) {
+            const item = monthData.investments.find(i => i.id === id);
+            if (!item) return;
+
+            if (item.monthlyInvested && item.monthlyOverrideAmount != null) {
+                showConfirm(`이미 ${currentMonth}월 투자금이 ₩${(parseInt(item.monthlyOverrideAmount)||0).toLocaleString()}으로 반영되어 있습니다. 기존 내역을 제거하고 기본금액(₩${(parseInt(item.amount)||0).toLocaleString()})으로 되돌리시겠습니까?`, () => {
+                    item.monthlyOverrideAmount = null;
+                    item.monthlyInvested = false;
+                    saveToFirebase('제거되었습니다');
+                    renderUI();
+                });
+                return;
+            }
+
+            _investExtraTargetId = id;
+            document.getElementById('invest-extra-modal-title').innerText = `${currentMonth}월 투자금 수정`;
+            document.getElementById('invest-extra-modal-desc').innerText = `[${item.name}] 기본 금액 ₩${(parseInt(item.amount)||0).toLocaleString()}은 그대로 두고, 이번 달에 실제로 투자한 금액을 입력해주세요. 기본금액보다 적게 넣었거나(이슈 발생 등), 상여 등으로 더 많이 넣었어도 그 값 그대로 반영됩니다 (더해지지 않아요).`;
+            document.getElementById('invest-extra-amount').value = '';
+            document.getElementById('invest-extra-modal').classList.remove('hidden');
+        }
+        function closeInvestExtraModal() {
+            document.getElementById('invest-extra-modal').classList.add('hidden');
+            _investExtraTargetId = null;
+        }
+        function submitInvestExtra(e) {
+            e.preventDefault();
+            const item = monthData.investments.find(i => i.id === _investExtraTargetId);
+            if (!item) { closeInvestExtraModal(); return; }
+            item.monthlyOverrideAmount = parseInt(document.getElementById('invest-extra-amount').value) || 0;
+            item.monthlyInvested = true;
+            closeInvestExtraModal();
+            saveToFirebase('투자금이 반영되었습니다');
+            renderUI();
+        }
+
+        // ===== 카테고리 검색형 드롭다운 (수입/지출/투자 공용) =====
+        let _catDropdownTarget = null; // { inputEl, type, itemId }
+        const normalizeCat = (s) => (s || '').replace(/\s/g, '').toLowerCase();
+
+        // 상단 "내역 추가" 모달의 카테고리 입력창은 담당 유형(수입/지출/투자)에 따라 옵션 목록이 바뀜
+        function openCategoryDropdownForForm(inputEl) {
+            const type = document.getElementById('form-type').value;
+            openCategoryDropdown(inputEl, type, null);
+        }
+
+        // itemId가 있으면(테이블 행) 선택 즉시 저장, 없으면(모달 신규입력) 값만 채움
+        function openCategoryDropdown(inputEl, type, itemId) {
+            _catDropdownTarget = { inputEl, type, itemId: itemId || null };
+            const rect = inputEl.getBoundingClientRect();
+            const panel = document.getElementById('category-dropdown');
+            panel.style.left = rect.left + 'px';
+            panel.style.top = (rect.bottom + 4) + 'px';
+            panel.style.width = Math.max(rect.width, 200) + 'px';
+            renderCategoryDropdown(true); // 처음 열 때는 기존 값으로 필터링하지 않고 전체 목록을 보여줌
+            panel.classList.remove('hidden');
+        }
+
+        function filterCategoryDropdown(inputEl) {
+            if (!_catDropdownTarget || _catDropdownTarget.inputEl !== inputEl) return;
+            // 선택/추가 직후 패널이 숨겨진 상태에서도, 이어서 타이핑하면 다시 열어서 보여줌
+            document.getElementById('category-dropdown').classList.remove('hidden');
+            renderCategoryDropdown(false);
+        }
+
+        function renderCategoryDropdown(showAll) {
+            if (!_catDropdownTarget) return;
+            const { inputEl, type } = _catDropdownTarget;
+            const query = showAll ? '' : inputEl.value.trim();
+            const options = categoryOptions[type] || [];
+            const filtered = query ? options.filter(c => normalizeCat(c).includes(normalizeCat(query))) : options;
+
+            const listEl = document.getElementById('category-dropdown-list');
+            listEl.innerHTML = filtered.length
+                ? filtered.map(c => `<button type="button" onmousedown="selectCategoryOption(event, '${c.replace(/'/g, "\\'")}')" class="w-full text-left px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 transition">${c}</button>`).join('')
+                : `<p class="px-3 py-2 text-xs text-slate-400">일치하는 카테고리가 없습니다</p>`;
+
+            const addBtn = document.getElementById('category-dropdown-add');
+            const hintEl = document.getElementById('category-dropdown-hint');
+            const exactMatch = options.some(c => normalizeCat(c) === normalizeCat(query));
+            if (query && !exactMatch) {
+                document.getElementById('category-dropdown-add-label').innerText = `+ "${query}" 카테고리 추가하기`;
+                addBtn.classList.remove('hidden');
+                addBtn.classList.add('flex');
+                hintEl.classList.add('hidden');
+            } else {
+                addBtn.classList.add('hidden');
+                addBtn.classList.remove('flex');
+                // 찾는 카테고리가 없을 때 새로 입력해서 추가할 수 있다는 걸 미리 안내
+                hintEl.classList.remove('hidden');
+            }
+        }
+
+        function selectCategoryOption(e, value) {
+            e.preventDefault();
+            if (!_catDropdownTarget) return;
+            const { inputEl, type, itemId } = _catDropdownTarget;
+            inputEl.value = value;
+            if (itemId) updateInlineData(type, itemId, 'category', value);
+            // 패널만 닫고 입력창과의 연결(_catDropdownTarget)은 유지 -> 같은 칸에서 바로 이어서 검색/추가 가능
+            closeCategoryDropdown(false);
+        }
+
+        // 카테고리 입력창에서 Enter: 목록에 없는 새 값이면 추가 버튼을 누른 것과 동일하게 즉시 카테고리로 등록, 있으면 그대로 확정 후 닫기
+        function handleCategoryKeydown(e) {
+            if (e.key !== 'Enter') return;
+            e.preventDefault();
+            const addBtn = document.getElementById('category-dropdown-add');
+            if (_catDropdownTarget && _catDropdownTarget.inputEl === e.target && addBtn && !addBtn.classList.contains('hidden')) {
+                addNewCategoryOption(e);
+            } else {
+                e.target.blur();
+            }
+        }
+
+        function addNewCategoryOption(e) {
+            e.preventDefault();
+            if (!_catDropdownTarget) return;
+            const { inputEl, type, itemId } = _catDropdownTarget;
+            const value = inputEl.value.trim();
+            if (!value) return;
+            if (!categoryOptions[type].some(c => normalizeCat(c) === normalizeCat(value))) {
+                categoryOptions[type] = [...categoryOptions[type], value];
+                db.collection('finance_meta').doc('categories').set(categoryOptions);
+            }
+            inputEl.value = value;
+            if (itemId) updateInlineData(type, itemId, 'category', value);
+            closeCategoryDropdown(false);
+        }
+
+        function closeCategoryDropdown(clearTarget = true) {
+            const panel = document.getElementById('category-dropdown');
+            if (panel) panel.classList.add('hidden');
+            if (clearTarget) _catDropdownTarget = null;
+        }
+
+        // 바깥 클릭/스크롤 시 카테고리 드롭다운 자동 닫힘
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('category-dropdown');
+            if (!panel || panel.classList.contains('hidden')) return;
+            if (_catDropdownTarget && (panel.contains(e.target) || _catDropdownTarget.inputEl === e.target)) return;
+            closeCategoryDropdown();
+        });
+
+        // ===== 코멘트(채팅) 탭 =====
+        // 이 기기에서 "나"로 표시할 이름을 로컬에 저장 (하은/루리 각자 기기에서 한 번만 선택하면 됨)
+        function setChatIdentity(name) {
+            chatIdentity = name;
+            try { localStorage.setItem('haru_chat_identity', name); } catch (e) {}
+            renderChatMessages();
+        }
+
+        function loadChatMessages() {
+            const ref = db.collection('chat_messages').orderBy('timestamp', 'asc').limitToLast(3000);
+            if (chatUnsubscribe) chatUnsubscribe();
+            chatUnsubscribe = ref.onSnapshot(snapshot => {
+                chatMessages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderChatMessages();
+            });
+        }
+
+        function formatChatDate(date) {
+            const days = ['일', '월', '화', '수', '목', '금', '토'];
+            return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일 (${days[date.getDay()]})`;
+        }
+        function formatChatTime(date) {
+            let h = date.getHours(), m = date.getMinutes();
+            const ampm = h < 12 ? '오전' : '오후';
+            h = h % 12; if (h === 0) h = 12;
+            return `${ampm} ${h}:${String(m).padStart(2, '0')}`;
+        }
+
+        // 채팅 메시지에 사용자가 입력한 텍스트를 그대로 innerHTML에 넣지 않도록 이스케이프 처리 (XSS 방지)
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function renderChatMessages() {
+            const el = document.getElementById('chat-messages');
+            if (!el) return;
+            // 스크롤이 이미 맨 아래 근처였을 때만 새 메시지 도착 시 자동으로 따라 내려가도록 함
+            const wasNearBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 80;
+
+            if (chatMessages.length === 0) {
+                el.innerHTML = `<p class="text-center text-slate-400 text-sm py-10">아직 코멘트가 없습니다. 첫 메시지를 남겨보세요!</p>`;
+                return;
+            }
+
+            let html = '';
+            let lastDateKey = null;
+            chatMessages.forEach(msg => {
+                const date = (msg.timestamp && msg.timestamp.toDate) ? msg.timestamp.toDate() : new Date(msg.clientTime || Date.now());
+                const dateKey = date.toDateString();
+                if (dateKey !== lastDateKey) {
+                    html += `<div class="flex items-center justify-center my-4"><span class="bg-slate-100 text-slate-500 text-xs font-semibold px-3 py-1 rounded-full">${formatChatDate(date)}</span></div>`;
+                    lastDateKey = dateKey;
+                }
+                const isMe = msg.sender === chatIdentity;
+                const bubbleColor = isMe ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-800';
+                const nameLabel = !isMe ? `<span class="text-[11px] font-bold text-slate-400 mb-0.5 ml-1">${escapeHtml(msg.sender)}</span>` : '';
+                const deleteBtn = isMe ? `<button onclick="deleteChatMessage('${msg.id}')" class="text-[10px] text-slate-300 hover:text-rose-400 transition shrink-0 self-center">삭제</button>` : '';
+                html += `
+                    <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} mb-2">
+                        ${nameLabel}
+                        <div class="flex items-end gap-1.5 ${isMe ? 'flex-row-reverse' : ''}">
+                            <div class="max-w-[75%] ${bubbleColor} px-3.5 py-2 rounded-2xl text-sm leading-relaxed break-words whitespace-pre-wrap">${escapeHtml(msg.text)}</div>
+                            <span class="text-[10px] text-slate-300 shrink-0">${formatChatTime(date)}</span>
+                            ${deleteBtn}
+                        </div>
+                    </div>
+                `;
+            });
+            el.innerHTML = html;
+            lucide.createIcons();
+            if (wasNearBottom) el.scrollTop = el.scrollHeight;
+        }
+
+        function sendChatMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+            db.collection('chat_messages').add({
+                sender: chatIdentity,
+                text: text,
+                clientTime: Date.now(),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            input.value = '';
+            input.focus();
+        }
+
+        function deleteChatMessage(id) {
+            showConfirm('이 메시지를 삭제하시겠습니까?', () => {
+                db.collection('chat_messages').doc(id).delete();
+            });
+        }
     </script>
 </body>
 </html>
