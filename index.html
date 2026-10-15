@@ -1074,8 +1074,9 @@
                     <td class="px-4 py-3">
                         <div class="flex items-center justify-end font-bold text-rose-600 text-sm">
                             <span class="mr-1 opacity-70">-</span>
-                            <input type="number" value="${item.amount}" class="w-24 bg-transparent text-right border border-transparent hover:border-slate-200 focus:border-indigo-500 focus:bg-white px-2 py-1 rounded-lg outline-none font-bold tracking-tight transition"
-                                onblur="updateFixedField('${item.id}', 'amount', this.value)" onkeydown="if(event.key==='Enter') this.blur()">
+                            <input type="text" inputmode="numeric" value="${(parseInt(item.amount) || 0).toLocaleString()}" class="w-24 bg-transparent text-right border border-transparent hover:border-slate-200 focus:border-indigo-500 focus:bg-white px-2 py-1 rounded-lg outline-none font-bold tracking-tight transition"
+                                oninput="formatAmountInput(this)"
+                                onblur="updateFixedField('${item.id}', 'amount', this.value.replace(/,/g, ''))" onkeydown="if(event.key==='Enter') this.blur()">
                         </div>
                     </td>
                     <td class="px-4 py-3 text-center">
@@ -1417,10 +1418,10 @@
                     <td class="${pad} py-3">
                         <div class="flex items-center justify-end font-bold ${amountClass} text-sm">
                             <span class="mr-1 opacity-70">${sign}</span>
-                            <input type="number" value="${type === 'invest' ? investDisplayAmount : item.amount}"
+                            <input type="text" inputmode="numeric" value="${(parseInt(type === 'invest' ? investDisplayAmount : item.amount) || 0).toLocaleString()}"
                                 ${investAmountLocked ? 'readonly title="이번 달 투자금이 대체된 항목은 기본 금액을 직접 수정할 수 없어요. N월 투자 버튼에서 제거 후 다시 시도하세요."' : ''}
                                 class="w-28 bg-transparent text-right border border-transparent px-2 py-1 rounded-lg outline-none font-bold tracking-tight transition ${investAmountLocked ? 'cursor-not-allowed' : 'hover:border-slate-200 focus:border-blue-500 focus:bg-white'}"
-                                ${investAmountLocked ? '' : `onblur="updateInlineData('${type}', '${item.id}', 'amount', this.value)"`}
+                                ${investAmountLocked ? '' : `oninput="formatAmountInput(this)" onblur="updateInlineData('${type}', '${item.id}', 'amount', this.value.replace(/,/g, ''))"`}
                                 onkeydown="if(event.key==='Enter') this.blur()">
                         </div>
                         ${investExtraBreakdown}
@@ -1694,6 +1695,18 @@
             closeInvestExtraModal();
             saveToFirebase('투자금이 반영되었습니다');
             renderUI();
+        }
+
+        // 금액 입력칸(type=text)에서 타이핑하는 동안 실시간으로 천 단위 콤마를 넣어주는 공용 함수.
+        // 커서 위치는 "콤마 추가/제거로 늘어나거나 줄어든 길이만큼" 보정해서 입력 중 커서가 튀지 않도록 함.
+        function formatAmountInput(el) {
+            const cursorPos = el.selectionStart;
+            const originalLength = el.value.length;
+            const digitsOnly = el.value.replace(/[^\d]/g, '');
+            const formatted = digitsOnly ? parseInt(digitsOnly, 10).toLocaleString() : '';
+            el.value = formatted;
+            const newCursorPos = Math.max(0, cursorPos + (formatted.length - originalLength));
+            el.setSelectionRange(newCursorPos, newCursorPos);
         }
 
         // ===== 카테고리 검색형 드롭다운 (수입/지출/고정비/투자 공용) =====
