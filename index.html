@@ -186,6 +186,44 @@
                             <h3 class="text-3xl font-extrabold" id="kpi-invest-avail">₩ 0</h3>
                         </div>
                     </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 mb-6">
+                        <h3 class="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2"><i data-lucide="users" class="w-5 h-5 text-indigo-500"></i> 개인별 수입 - 지출 = 잔여</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4" id="personal-balance-grid">
+                            <div class="rounded-xl border border-purple-100 bg-purple-50/50 p-4">
+                                <p class="text-xs font-bold text-purple-700 mb-2">하은</p>
+                                <div class="space-y-1 text-sm">
+                                    <div class="flex justify-between text-slate-500"><span>수입</span><span id="personal-income-하은" class="font-semibold text-blue-600">₩ 0</span></div>
+                                    <div class="flex justify-between text-slate-500"><span>지출</span><span id="personal-expense-하은" class="font-semibold text-rose-600">₩ 0</span></div>
+                                </div>
+                                <div class="border-t border-purple-100 mt-2 pt-2 flex justify-between items-baseline">
+                                    <span class="text-xs font-bold text-slate-500">잔여</span>
+                                    <span id="personal-balance-하은" class="text-lg font-extrabold text-slate-800">₩ 0</span>
+                                </div>
+                            </div>
+                            <div class="rounded-xl border border-amber-100 bg-amber-50/50 p-4">
+                                <p class="text-xs font-bold text-amber-700 mb-2">루리</p>
+                                <div class="space-y-1 text-sm">
+                                    <div class="flex justify-between text-slate-500"><span>수입</span><span id="personal-income-루리" class="font-semibold text-blue-600">₩ 0</span></div>
+                                    <div class="flex justify-between text-slate-500"><span>지출</span><span id="personal-expense-루리" class="font-semibold text-rose-600">₩ 0</span></div>
+                                </div>
+                                <div class="border-t border-amber-100 mt-2 pt-2 flex justify-between items-baseline">
+                                    <span class="text-xs font-bold text-slate-500">잔여</span>
+                                    <span id="personal-balance-루리" class="text-lg font-extrabold text-slate-800">₩ 0</span>
+                                </div>
+                            </div>
+                            <div class="rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+                                <p class="text-xs font-bold text-slate-600 mb-2">공통</p>
+                                <div class="space-y-1 text-sm">
+                                    <div class="flex justify-between text-slate-500"><span>수입</span><span id="personal-income-공통" class="font-semibold text-blue-600">₩ 0</span></div>
+                                    <div class="flex justify-between text-slate-500"><span>지출</span><span id="personal-expense-공통" class="font-semibold text-rose-600">₩ 0</span></div>
+                                </div>
+                                <div class="border-t border-slate-200 mt-2 pt-2 flex justify-between items-baseline">
+                                    <span class="text-xs font-bold text-slate-500">잔여</span>
+                                    <span id="personal-balance-공통" class="text-lg font-extrabold text-slate-800">₩ 0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
                         <h3 class="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2"><i data-lucide="pie-chart" class="w-5 h-5 text-rose-500"></i> 지출 카테고리 비율</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -1377,6 +1415,19 @@
             document.getElementById('kpi-expense').innerText = '₩ ' + totalExpense.toLocaleString();
             document.getElementById('kpi-invest-total').innerText = '₩ ' + totalInvest.toLocaleString();
             document.getElementById('kpi-invest-avail').innerText = '₩ ' + (totalIncome - totalExpense).toLocaleString();
+
+            // 담당자(하은/루리/공통)별 수입-지출=잔여 — 공통 지출을 임의로 반반 나누지 않고 그대로 별도 표시
+            ['하은', '루리', '공통'].forEach(u => {
+                const pIncome = monthData.incomes.filter(i => i.user === u).reduce((s, i) => s + (parseInt(i.amount) || 0), 0);
+                const pExpense = monthData.expenses.filter(e => e.user === u).reduce((s, e) => s + (parseInt(e.amount) || 0), 0);
+                const pBalance = pIncome - pExpense;
+                document.getElementById(`personal-income-${u}`).innerText = '₩ ' + pIncome.toLocaleString();
+                document.getElementById(`personal-expense-${u}`).innerText = '₩ ' + pExpense.toLocaleString();
+                const balanceEl = document.getElementById(`personal-balance-${u}`);
+                balanceEl.innerText = (pBalance < 0 ? '-₩ ' + Math.abs(pBalance).toLocaleString() : '₩ ' + pBalance.toLocaleString());
+                balanceEl.classList.toggle('text-rose-600', pBalance < 0);
+                balanceEl.classList.toggle('text-slate-800', pBalance >= 0);
+            });
 
             const catMap = {};
             monthData.expenses.forEach(ex => {
