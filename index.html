@@ -80,6 +80,9 @@
             <button onclick="switchTab('invest')" id="nav-invest" class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-800 hover:text-white rounded-xl transition-all font-medium text-left">
                 <i data-lucide="line-chart" class="w-5 h-5 text-purple-400"></i> 투자 내역
             </button>
+            <button onclick="switchTab('personal')" id="nav-personal" class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-800 hover:text-white rounded-xl transition-all font-medium text-left">
+                <i data-lucide="user-round" class="w-5 h-5 text-teal-400"></i> 개인 가계부
+            </button>
             <button onclick="switchTab('chat')" id="nav-chat" class="nav-btn w-full flex items-center gap-3 px-4 py-3 hover:bg-slate-800 hover:text-white rounded-xl transition-all font-medium text-left">
                 <i data-lucide="message-circle" class="w-5 h-5 text-sky-400"></i> 코멘트
             </button>
@@ -545,6 +548,50 @@
                 </div>
             </div>
 
+            <div id="tab-personal" class="tab-content max-w-5xl mx-auto space-y-4">
+                <p class="text-xs text-slate-400 px-1">* 이 탭은 확인용 요약 화면이에요. 수정은 수입 내역 / 지출 및 고정비 탭에서 해주세요.</p>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button onclick="togglePersonalSection('하은')" class="w-full px-6 py-5 flex items-center justify-between gap-3 hover:bg-slate-50 transition text-left">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-400 shrink-0"></span>
+                            <h3 class="text-lg font-bold text-slate-800 shrink-0">하은 가계부</h3>
+                            <span id="personal-summary-하은" class="text-xs text-slate-400 truncate"></span>
+                        </div>
+                        <i data-lucide="chevron-down" id="personal-chevron-하은" class="w-4 h-4 text-slate-400 shrink-0 transition-transform"></i>
+                    </button>
+                    <div id="personal-body-하은" class="hidden border-t border-slate-100 px-6 py-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-600 mb-2 flex items-center gap-1.5"><i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-500"></i> 수입 내역</h4>
+                            <div id="personal-income-table-하은"></div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-600 mb-2 flex items-center gap-1.5"><i data-lucide="credit-card" class="w-3.5 h-3.5 text-rose-500"></i> 지출 및 고정비 내역</h4>
+                            <div id="personal-expense-table-하은"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                    <button onclick="togglePersonalSection('루리')" class="w-full px-6 py-5 flex items-center justify-between gap-3 hover:bg-slate-50 transition text-left">
+                        <div class="flex items-center gap-2 min-w-0">
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 shrink-0"></span>
+                            <h3 class="text-lg font-bold text-slate-800 shrink-0">루리 가계부</h3>
+                            <span id="personal-summary-루리" class="text-xs text-slate-400 truncate"></span>
+                        </div>
+                        <i data-lucide="chevron-down" id="personal-chevron-루리" class="w-4 h-4 text-slate-400 shrink-0 transition-transform"></i>
+                    </button>
+                    <div id="personal-body-루리" class="hidden border-t border-slate-100 px-6 py-5 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-600 mb-2 flex items-center gap-1.5"><i data-lucide="trending-up" class="w-3.5 h-3.5 text-emerald-500"></i> 수입 내역</h4>
+                            <div id="personal-income-table-루리"></div>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-600 mb-2 flex items-center gap-1.5"><i data-lucide="credit-card" class="w-3.5 h-3.5 text-rose-500"></i> 지출 및 고정비 내역</h4>
+                            <div id="personal-expense-table-루리"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div id="tab-chat" class="tab-content max-w-3xl mx-auto h-full">
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 flex flex-col h-[75vh]">
                     <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between shrink-0">
@@ -618,7 +665,7 @@
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1.5">금액</label>
-                    <input type="number" id="form-amount" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition" required autocomplete="off">
+                    <input type="text" inputmode="numeric" id="form-amount" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-500 transition" oninput="formatAmountInput(this)" required autocomplete="off">
                 </div>
                 <label id="form-recurring-wrap" class="flex items-start gap-2.5 bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-3 cursor-pointer">
                     <input type="checkbox" id="form-recurring" class="mt-1 w-4 h-4 accent-indigo-600">
@@ -659,7 +706,7 @@
                 <p id="invest-extra-modal-desc" class="text-sm text-slate-500 leading-relaxed"></p>
                 <div>
                     <label class="block text-xs font-bold text-slate-500 mb-1.5">이번 달 투자금 (기본 금액을 대체 — 더해지지 않아요)</label>
-                    <input type="number" id="invest-extra-amount" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-purple-500 transition" required autocomplete="off">
+                    <input type="text" inputmode="numeric" id="invest-extra-amount" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm outline-none focus:border-purple-500 transition" oninput="formatAmountInput(this)" required autocomplete="off">
                 </div>
                 <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-purple-500/30 transition mt-2">
                     투자금 반영하기
@@ -1129,6 +1176,70 @@
             lucide.createIcons();
         }
 
+        // "개인 가계부" 탭: 하은/루리 섹션을 펼치고/접기 (기본은 접힌 상태)
+        function togglePersonalSection(user) {
+            const body = document.getElementById(`personal-body-${user}`);
+            const chevron = document.getElementById(`personal-chevron-${user}`);
+            if (!body) return;
+            const willOpen = body.classList.contains('hidden');
+            body.classList.toggle('hidden');
+            if (chevron) chevron.classList.toggle('rotate-180', willOpen);
+        }
+
+        // "개인 가계부" 탭: 담당자별 수입/지출을 한 화면에서 볼 수 있도록 요약 렌더링 (확인용, 수정은 기존 탭에서)
+        function personalLedgerTableHtml(items, kind) {
+            if (!items.length) {
+                return `<p class="text-sm text-slate-400 py-4 text-center">등록된 ${kind === 'income' ? '수입' : '지출'} 내역이 없습니다.</p>`;
+            }
+            const sign = kind === 'income' ? '+' : '-';
+            const amountColor = kind === 'income' ? 'text-blue-600' : 'text-rose-600';
+            const total = items.reduce((s, i) => s + (parseInt(i.amount) || 0), 0);
+            const rows = items.map(i => {
+                const badge = kind === 'expense'
+                    ? (isFixedItem(i)
+                        ? '<span class="ml-1 text-[9px] font-bold text-indigo-600 bg-indigo-50 px-1 py-0.5 rounded align-middle">고정비</span>'
+                        : '<span class="ml-1 text-[9px] font-bold text-amber-600 bg-amber-50 px-1 py-0.5 rounded align-middle">추가</span>')
+                    : '';
+                return `<tr>
+                    <td class="py-1.5 text-slate-500">${escapeHtml(i.category)}</td>
+                    <td class="py-1.5 font-semibold text-slate-700">${escapeHtml(i.name)}${badge}</td>
+                    <td class="py-1.5 text-right font-bold ${amountColor}">${sign}₩${(parseInt(i.amount) || 0).toLocaleString()}</td>
+                </tr>`;
+            }).join('');
+            return `
+                <table class="w-full text-sm">
+                    <thead class="text-xs text-slate-400 border-b border-slate-100">
+                        <tr><th class="text-left font-semibold py-1.5">카테고리</th><th class="text-left font-semibold py-1.5">항목명</th><th class="text-right font-semibold py-1.5">금액</th></tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-50">${rows}</tbody>
+                    <tfoot><tr class="border-t border-slate-200">
+                        <td colspan="2" class="py-2 font-bold text-slate-600">합계</td>
+                        <td class="py-2 text-right font-extrabold ${amountColor}">${sign}₩${total.toLocaleString()}</td>
+                    </tr></tfoot>
+                </table>`;
+        }
+
+        function renderPersonalLedger() {
+            ['하은', '루리'].forEach(u => {
+                const incomeEl = document.getElementById(`personal-income-table-${u}`);
+                const expenseEl = document.getElementById(`personal-expense-table-${u}`);
+                const summaryEl = document.getElementById(`personal-summary-${u}`);
+                if (!incomeEl || !expenseEl || !summaryEl) return;
+
+                const incomes = monthData.incomes.filter(i => i.user === u).sort((a, b) => a.category.localeCompare(b.category));
+                const expenses = monthData.expenses.filter(e => e.user === u).sort((a, b) => a.category.localeCompare(b.category));
+                const totalIncome = incomes.reduce((s, i) => s + (parseInt(i.amount) || 0), 0);
+                const totalExpense = expenses.reduce((s, e) => s + (parseInt(e.amount) || 0), 0);
+                const balance = totalIncome - totalExpense;
+                const balanceText = balance < 0 ? `-₩${Math.abs(balance).toLocaleString()}` : `₩${balance.toLocaleString()}`;
+
+                summaryEl.innerText = `수입 ₩${totalIncome.toLocaleString()} · 지출 ₩${totalExpense.toLocaleString()} · 잔여 ${balanceText}`;
+                incomeEl.innerHTML = personalLedgerTableHtml(incomes, 'income');
+                expenseEl.innerHTML = personalLedgerTableHtml(expenses, 'expense');
+            });
+            lucide.createIcons();
+        }
+
         function listenFixed() {
             recurringRef().onSnapshot(doc => {
                 const data = doc.exists ? doc.data() : null;
@@ -1368,6 +1479,7 @@
             calculateKPIsAndCharts();
             loadAnnualData(); // 월 데이터 로딩(신규 생성 포함) 완료 후 연간 대시보드를 항상 함께 동기화
             checkFixedSync();
+            renderPersonalLedger();
         }
 
         // 실시간 연동 핵심: 모든 텍스트 요소를 간결한 무테(border-transparent) 인풋 박스로 변경
@@ -1499,7 +1611,7 @@
                 user: document.getElementById('form-user').value,
                 category: document.getElementById('form-category').value.trim(),
                 name: document.getElementById('form-name').value.trim(),
-                amount: parseInt(document.getElementById('form-amount').value) || 0
+                amount: parseInt(document.getElementById('form-amount').value.replace(/,/g, '')) || 0
             };
 
             const makeRecurring = type === 'expense' && document.getElementById('form-recurring').checked;
@@ -1690,7 +1802,7 @@
             e.preventDefault();
             const item = monthData.investments.find(i => i.id === _investExtraTargetId);
             if (!item) { closeInvestExtraModal(); return; }
-            item.monthlyOverrideAmount = parseInt(document.getElementById('invest-extra-amount').value) || 0;
+            item.monthlyOverrideAmount = parseInt(document.getElementById('invest-extra-amount').value.replace(/,/g, '')) || 0;
             item.monthlyInvested = true;
             closeInvestExtraModal();
             saveToFirebase('투자금이 반영되었습니다');
